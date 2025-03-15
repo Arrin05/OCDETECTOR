@@ -50,6 +50,12 @@ if image is not None:
     # Perform object detection
     results = model.predict(image)
 
+    # Debugging: Check results
+    st.write("Results:", results)
+    if len(results) > 0:
+        st.write("Detected boxes:", results[0].boxes)
+        st.write("Detected classes:", [model.names[int(box.cls)] for box in results[0].boxes])
+
     # Initialize flags for cancer detection
     has_multinucleated = False
     has_larger_than_normal = False
@@ -57,6 +63,7 @@ if image is not None:
     # Check detected classes
     for box in results[0].boxes:
         class_name = model.names[int(box.cls)]
+        st.write(f"Detected class: {class_name}")  # Debugging the detected classes
         if class_name == "Multinucleated":
             has_multinucleated = True
         elif class_name == "Larger than Normal":
@@ -70,7 +77,7 @@ if image is not None:
     st.subheader("Conclusion:")
     if has_multinucleated or has_larger_than_normal:
         st.markdown("⚠️ **Thus, you have oral cancer.**")
-    elif len(results[0].boxes) == 0:
+    elif len(results[0].boxes) == 0:  # No boxes detected
         st.markdown("😄 **Bonak kaba kita mong saliva lng e detect, kung di ka ba nmn Isang kupal.**")
     else:
         st.markdown("✅ **Thus, you don’t have any oral cancer.**")
