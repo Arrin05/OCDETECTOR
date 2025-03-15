@@ -23,7 +23,7 @@ st.markdown(
 st.markdown('<h1 class="title">Do you have Oral Cancer?</h1>', unsafe_allow_html=True)
 
 # Load YOLOv8 model
-model = YOLO("C:/Users/Lab Telecom/Documents/APP/best.pt")  # Update with your correct model path
+model = YOLO("model = YOLO("best.pt")   # Update with your correct model path
 
 # Image upload or camera option
 option = st.radio("Choose image source:", ("Upload Image", "Use Camera"))
