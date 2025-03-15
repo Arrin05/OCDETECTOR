@@ -23,8 +23,7 @@ st.markdown(
 st.markdown('<h1 class="title">Do you have Oral Cancer?</h1>', unsafe_allow_html=True)
 
 # Load YOLOv8 model
-model = YOLO("best.pt")
-
+model = YOLO("C:/Users/Lab Telecom/Documents/APP/best.pt")  # Update with your correct model path
 
 # Image upload or camera option
 option = st.radio("Choose image source:", ("Upload Image", "Use Camera"))
@@ -71,5 +70,7 @@ if image is not None:
     st.subheader("Conclusion:")
     if has_multinucleated or has_larger_than_normal:
         st.markdown("⚠️ **Thus, you have oral cancer.**")
+    elif len(results[0].boxes) == 0:
+        st.markdown("😄 **Bonak kaba kita mong saliva lng e detect, kung di ka ba nmn Isang kupal.**")
     else:
         st.markdown("✅ **Thus, you don’t have any oral cancer.**")
