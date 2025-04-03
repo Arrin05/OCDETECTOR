@@ -47,7 +47,11 @@ st.markdown(
 st.markdown('<h1 class="title">Do you have Oral Cancer?</h1>', unsafe_allow_html=True)
 
 # Load YOLO model
-model = YOLO("C:/Users/Lab Telecom/Documents/APP/best.pt")
+try:
+    model = YOLO("best.pt")
+except FileNotFoundError:
+    st.error("Error: The YOLO model file 'best.pt' was not found at the specified path.")
+    st.stop()
 
 # Sidebar with options
 st.sidebar.markdown('<div class="sidebar"><h2>Options</h2></div>', unsafe_allow_html=True)
@@ -75,15 +79,15 @@ elif option == "Use Camera":
         st.image(image, caption="Captured Image", use_column_width=True)
 
 # Process image if available
-if image:
+if image and 'model' in locals(): # Ensure the model loaded successfully
     results = model.predict(image)
-    has_cancer = any(model.names[int(box.cls)] in ["Multinucleated", "Larger than Normal"] for box in results[0].boxes)
+    has_cancer = any(model.names[int(box.cls)] in ["MULTINUCLEATED", "LARGER THAN NORMAL"] for box in results[0].boxes)
     annotated_image = results[0].plot()
-    
+
     st.markdown('<div class="image-container">', unsafe_allow_html=True)
     st.image(annotated_image, caption="Detected Cells", use_column_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
-    
+
     # Conclusion Section
     st.markdown('<div class="conclusion">', unsafe_allow_html=True)
     st.subheader("Conclusion:")
@@ -91,42 +95,42 @@ if image:
         st.error("⚠️ **You have oral cancer.**")
         st.markdown("### Follow these recommendations for treatment and support:")
         st.markdown("1. **Follow Medical Treatment**")
-        st.markdown("   - Consult with an oncologist and dentist.")
-        st.markdown("   - Follow prescribed treatments like surgery, chemotherapy, or radiation.")
-        st.markdown("   - Regularly attend medical checkups.")
-        
+        st.markdown("    - Consult with an oncologist and dentist.")
+        st.markdown("    - Follow prescribed treatments like surgery, chemotherapy, or radiation.")
+        st.markdown("    - Regularly attend medical checkups.")
+
         st.markdown("2. **Improve Diet and Nutrition**")
-        st.markdown("   - Eat a balanced diet rich in vitamins and antioxidants.")
-        st.markdown("   - Avoid spicy and acidic foods.")
-        
+        st.markdown("    - Eat a balanced diet rich in vitamins and antioxidants.")
+        st.markdown("    - Avoid spicy and acidic foods.")
+
         st.markdown("3. **Maintain Good Oral Hygiene**")
-        st.markdown("   - Use a soft-bristled toothbrush and mild mouthwash.")
-        st.markdown("   - Rinse with warm salt water to prevent infections.")
-        
+        st.markdown("    - Use a soft-bristled toothbrush and mild mouthwash.")
+        st.markdown("    - Rinse with warm salt water to prevent infections.")
+
         st.markdown("4. **Avoid Harmful Substances**")
-        st.markdown("   - Quit smoking and alcohol consumption.")
-        st.markdown("   - Avoid chewing tobacco and betel nuts.")
-        
+        st.markdown("    - Quit smoking and alcohol consumption.")
+        st.markdown("    - Avoid chewing tobacco and betel nuts.")
+
         st.markdown("5. **Seek Emotional Support**")
-        st.markdown("   - Join a support group or speak to a counselor.")
-        
+        st.markdown("    - Join a support group or speak to a counselor.")
+
     else:
         st.success("✅ **You don’t have oral cancer.**")
         st.markdown("### Prevention Tips:")
         st.markdown("1. **Avoid Tobacco and Alcohol**")
-        st.markdown("   - Do not smoke or use tobacco products.")
-        st.markdown("   - Limit alcohol consumption.")
-        
+        st.markdown("    - Do not smoke or use tobacco products.")
+        st.markdown("    - Limit alcohol consumption.")
+
         st.markdown("2. **Maintain Good Oral Hygiene**")
-        st.markdown("   - Brush and floss daily.")
-        st.markdown("   - Regular dental checkups are essential.")
-        
+        st.markdown("    - Brush and floss daily.")
+        st.markdown("    - Regular dental checkups are essential.")
+
         st.markdown("3. **Eat a Healthy Diet**")
-        st.markdown("   - Consume fruits and vegetables rich in antioxidants.")
-        st.markdown("   - Reduce processed and red meat consumption.")
-        
+        st.markdown("    - Consume fruits and vegetables rich in antioxidants.")
+        st.markdown("    - Reduce processed and red meat consumption.")
+
         st.markdown("4. **Be Aware of Early Symptoms**")
-        st.markdown("   - Look for persistent mouth sores, lumps, or pain.")
-        st.markdown("   - Consult a doctor if unusual symptoms appear.")
-    
-    st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("    - Look for persistent mouth sores, lumps, or pain.")
+        st.markdown("    - Consult a doctor if unusual symptoms appear.")
+
+    st.markdown('</div>', unsafe_allow_html=True)S
