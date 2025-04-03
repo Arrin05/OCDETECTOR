@@ -2,6 +2,7 @@ import streamlit as st
 from ultralytics import YOLO
 from PIL import Image
 import numpy as np
+import os
 
 # Custom CSS for colorful styling
 st.markdown(
@@ -46,11 +47,23 @@ st.markdown(
 # App Title
 st.markdown('<h1 class="title">Do you have Oral Cancer?</h1>', unsafe_allow_html=True)
 
+# Determine the correct path to the model
+model_path = "best.pt"  # Assuming best.pt is in the same directory as app.py
+if not os.path.exists(model_path):
+    model_path = os.path.join(os.getcwd(), "best.pt") # Check current working directory
+    if not os.path.exists(model_path):
+        model_path = os.path.join(os.getcwd(), "models", "best.pt") # Check a 'models' subdirectory
+    if not os.path.exists(model_path):
+        model_path = "/mount/src/ocdetector/best.pt" # Explicitly check the path from the traceback
+
 # Load YOLO model
 try:
-    model = YOLO("best.pt")
+    model = YOLO(model_path)
 except FileNotFoundError:
-    st.error("Error: The YOLO model file 'best.pt' was not found at the specified path.")
+    st.error(f"Error: The YOLO model file 'best.pt' was not found at any of the checked paths: {model_path}, or the current directory/models subdirectory.")
+    st.stop()
+except Exception as e:
+    st.error(f"Error loading the YOLO model: {e}")
     st.stop()
 
 # Sidebar with options
@@ -92,7 +105,7 @@ if image and 'model' in locals(): # Ensure the model loaded successfully
     st.markdown('<div class="conclusion">', unsafe_allow_html=True)
     st.subheader("Conclusion:")
     if has_cancer:
-        st.error("⚠️ **You have oral cancer.**")
+        st.error("⚠️ **Possible presence of oral cancer detected.**")
         st.markdown("### Follow these recommendations for treatment and support:")
         st.markdown("1. **Follow Medical Treatment**")
         st.markdown("    - Consult with an oncologist and dentist.")
@@ -115,7 +128,7 @@ if image and 'model' in locals(): # Ensure the model loaded successfully
         st.markdown("    - Join a support group or speak to a counselor.")
 
     else:
-        st.success("✅ **You don’t have oral cancer.**")
+        st.success("✅ **No signs of oral cancer detected.**")
         st.markdown("### Prevention Tips:")
         st.markdown("1. **Avoid Tobacco and Alcohol**")
         st.markdown("    - Do not smoke or use tobacco products.")
@@ -133,4 +146,4 @@ if image and 'model' in locals(): # Ensure the model loaded successfully
         st.markdown("    - Look for persistent mouth sores, lumps, or pain.")
         st.markdown("    - Consult a doctor if unusual symptoms appear.")
 
-    st.markdown('</div>', unsafe_allow_html=True)S
+    st.markdown('</div>', unsafe_allow_html=True)
